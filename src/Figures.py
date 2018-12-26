@@ -5,6 +5,17 @@ from consts import X_MAX, Y_MAX
 class Figures:
     pivots = []
     figureType = []
+    types_polygon_number = {
+        "4": 0,
+        "5": 0,
+        "6": 0,
+        "7": 0,
+        "8": 0,
+        "9": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+    }
 
     def __iter__(self):
         for pivot, f_type in zip(self.pivots, self.figureType):
@@ -20,6 +31,8 @@ class Figures:
     def add(self, position=(X_MAX/2, Y_MAX/2), figure_type=12):
         self.pivots.append(position)
         self.figureType.append(figure_type)
+        self.types_polygon_number[str(figure_type)] +=1
+        print(self.types_polygon_number)
 
     @property
     def random_pivot(self):

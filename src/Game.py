@@ -25,11 +25,13 @@ class Game:
         return self.drawing_manager.pivots
 
     def print_mark(self, text="some text"):
-
+        self.screen.fill((0,0,0))
         textsurface = self.myfont.render(text, False, FONT_COLOR)
-        self.screen.blit(textsurface, (0, 0))
+        self.screen.blit(textsurface, (50, 50))
+
 
     def play(self):
+        circuit = ""
         self.drawing_manager.prepare_new_random_figure()
 
         while True:
@@ -40,12 +42,13 @@ class Game:
                 print("mouse button pressed")
                 self.drawing_manager.prepare_new_random_figure()
             if pygame.mouse.get_pressed()[2]:
-                self.mark.count_mark_of_structure()
+                circuit = self.mark.count_mark_of_structure()
 
+            self.print_mark(text=circuit)
             for next_id in range(self.drawing_manager.elements_num):
                 self.drawed_points.append(self.draw_next_ngon(next_id))
-            self.print_mark()
             pygame.display.update()
+            pygame.event.clear()
 
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14
