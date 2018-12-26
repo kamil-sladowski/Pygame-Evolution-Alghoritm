@@ -1,42 +1,51 @@
 import sys
 import pygame
 from math import sin, cos
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX
+from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR
 
 
 class Game:
 
-    def __init__(self, drawing_manager):
+    def __init__(self, drawing_manager, mark):
         self.drawing_manager = drawing_manager
+        self.mark = mark
         self.drawed_points = []
         pygame.init()
         self.screen = pygame.display.set_mode((X_MAX, Y_MAX))
+        pygame.font.init()
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
 
-    def __check_quit(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+    def __check_quit(self, event):
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
     @property
     def next_pivot(self):
         return self.drawing_manager.pivots
 
+    def print_mark(self, text="some text"):
+
+        textsurface = self.myfont.render(text, False, FONT_COLOR)
+        self.screen.blit(textsurface, (0, 0))
+
     def play(self):
         self.drawing_manager.prepare_new_random_figure()
 
         while True:
-            self.__check_quit()
+            event = pygame.event.wait()
+            self.__check_quit(event)
 
             if pygame.mouse.get_pressed()[0]:
                 print("mouse button pressed")
                 self.drawing_manager.prepare_new_random_figure()
-                # count_mark_of_structure() #todo
+            if pygame.mouse.get_pressed()[2]:
+                self.mark.count_mark_of_structure()
 
             for next_id in range(self.drawing_manager.elements_num):
                 self.drawed_points.append(self.draw_next_ngon(next_id))
+            self.print_mark()
             pygame.display.update()
-            pygame.time.delay(200)
 
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14

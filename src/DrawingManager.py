@@ -1,6 +1,6 @@
 from Figures import Figures
 from consts import *
-from random import randint, getrandbits
+from random import randint, choice, getrandbits
 
 
 class DrawingManager:
@@ -10,7 +10,7 @@ class DrawingManager:
         self.f.add()
 
     @staticmethod
-    def __is_point_in_range(x, y):
+    def is_point_in_range(x, y):
         if x > X_MAX or x < 0 or y > Y_MAX or y < 0:
             return False
         return True
@@ -18,17 +18,19 @@ class DrawingManager:
     def __count_next_pivot(self):
         while True:
             x, y = self.f.random_pivot
-            new_x = x + 2 * RADIUS * getrandbits(1)  # (-1 * getrandbits(1)) *
-            new_y = y + 2 * RADIUS * getrandbits(1)  # (-1 * getrandbits(1)) *
-            if self.__is_point_in_range(new_x, new_y) and (not (new_x, new_y) in self.f.pivots):
+            new_x = x + 2 * RADIUS * getrandbits(1) * choice([-1, 1])
+            new_y = y + 2 * RADIUS * getrandbits(1) * choice([-1, 1])
+            if self.is_point_in_range(new_x, new_y) and (not (new_x, new_y) in self.f.pivots):
                 print("NEW PAIR: {}  :  {}".format(new_x, new_y))
                 return new_x, new_y
-            # else:
+            else:
+                print("no found")
+                continue
             #     return 0,0
 
     def prepare_new_random_figure(self):
         pivot_pos = self.__count_next_pivot()
-        verticle_num = randint(4, 6)
+        verticle_num = randint(4, 12)
         self.f.add(pivot_pos, verticle_num)
 
     @property
