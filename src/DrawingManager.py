@@ -4,6 +4,7 @@ from random import randint, choice, getrandbits
 
 
 class DrawingManager:
+    figureTypeRange = (4,5)
 
     def __init__(self):
         self.f = Figures()
@@ -23,14 +24,10 @@ class DrawingManager:
             if self.is_point_in_range(new_x, new_y) and (not (new_x, new_y) in self.f.pivots):
                 print("NEW PAIR: {}  :  {}".format(new_x, new_y))
                 return new_x, new_y
-            else:
-                print("no found")
-                continue
-            #     return 0,0
 
     def prepare_new_random_figure(self):
         pivot_pos = self.__count_next_pivot()
-        verticle_num = randint(4, 12)
+        verticle_num = randint(DrawingManager.figureTypeRange[0], DrawingManager.figureTypeRange[1])
         self.f.add(pivot_pos, verticle_num)
 
     @property
@@ -45,3 +42,6 @@ class DrawingManager:
     def figure_types(self):
         return self.f.figureType
 
+    @property
+    def number_of_all_verticles(self):
+        return self.f.number_of_all_verticles

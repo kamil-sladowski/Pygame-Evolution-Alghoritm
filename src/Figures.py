@@ -39,6 +39,12 @@ class Figures:
         id = randint(0, len(self.pivots) - 1)
         return self.pivots[id]
 
+    @property
+    def number_of_all_verticles(self):
+        vert_num = 0
+        for type in self.types_polygon_number.keys():
+            vert_num += int(type) * self.types_polygon_number[type]
+        return vert_num
 
 
 

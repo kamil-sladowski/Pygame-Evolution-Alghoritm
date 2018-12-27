@@ -1,11 +1,12 @@
 from functools import reduce
 from math import sqrt
-
+from consts import RADIUS
 
 class Mark:
 
     def __init__(self, drawing_manager):
         self.figure_pivots = drawing_manager.pivots
+        self.number_of_all_verticles = drawing_manager.number_of_all_verticles
 
     @staticmethod
     def count_distance_between_points(p1, p2):
@@ -47,6 +48,8 @@ class Mark:
     def count_mark_of_structure(self):
         points = self.convex_hull_graham(self.figure_pivots)
         circuit = self.count_circuit(points)
-        mark = circuit / len(self.figure_pivots)
+        print("eeee {} {} ".format(self.number_of_all_verticles, len(self.figure_pivots)))
+        verts_to_figures = self.number_of_all_verticles/len(self.figure_pivots)
+        mark = verts_to_figures * circuit/(2*RADIUS)
         print(mark)
         return str(round(mark))
