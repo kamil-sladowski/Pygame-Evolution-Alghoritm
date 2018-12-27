@@ -4,6 +4,7 @@ from recordtype import recordtype
 
 PolygonsData = recordtype('PolygonsData', 'instance_num, probability, wheel_range')
 
+
 class Figures:
     range_begin, range_end = (4, 7)
     pivots = []
@@ -12,7 +13,6 @@ class Figures:
 
     def generate_polygon_data(self):
         probability = 1/len(range(self.range_begin, self.range_end + 1))
-        print("probability {}".format(probability))
         previous_polygon = PolygonsData(0, probability, (0, probability))
         yield previous_polygon
 
@@ -26,8 +26,6 @@ class Figures:
         polygon_generator = self.generate_polygon_data()
         for i in range(self.range_begin, self.range_end + 1):
             self.polygons_data[str(i)] = next(polygon_generator)
-
-
 
     def __iter__(self):
         for pivot, f_type in zip(self.pivots, self.figureType):

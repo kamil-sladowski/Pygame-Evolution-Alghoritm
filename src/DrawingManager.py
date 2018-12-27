@@ -1,6 +1,6 @@
 from Figures import Figures
 from consts import *
-from random import randint, choice, getrandbits
+from random import choice, getrandbits, random
 
 
 class DrawingManager:
@@ -26,9 +26,12 @@ class DrawingManager:
 
     def prepare_new_random_figure(self):
         pivot_pos = self.__count_next_pivot()
-        min_vert, max_vert = self.f.range_begin, self.f.range_end
-        verticle_num = randint(min_vert, max_vert)
-        self.f.add(pivot_pos, verticle_num)
+        r = random()
+        pol = self.f.polygons_data
+        for k, v in pol.items():
+            if v.wheel_range[0] < r < v.wheel_range[1]:
+                verticle_num = int(k)
+                self.f.add(pivot_pos, verticle_num)
 
     @property
     def elements_num(self):
@@ -45,3 +48,4 @@ class DrawingManager:
     @property
     def number_of_all_verticles(self):
         return self.f.number_of_all_verticles
+
