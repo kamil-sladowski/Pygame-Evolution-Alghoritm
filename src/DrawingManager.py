@@ -4,7 +4,6 @@ from random import randint, choice, getrandbits
 
 
 class DrawingManager:
-    figureTypeRange = (4,5)
 
     def __init__(self):
         self.f = Figures()
@@ -27,7 +26,8 @@ class DrawingManager:
 
     def prepare_new_random_figure(self):
         pivot_pos = self.__count_next_pivot()
-        verticle_num = randint(DrawingManager.figureTypeRange[0], DrawingManager.figureTypeRange[1])
+        min_vert, max_vert = self.f.range_begin, self.f.range_end
+        verticle_num = randint(min_vert, max_vert)
         self.f.add(pivot_pos, verticle_num)
 
     @property

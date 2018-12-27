@@ -29,7 +29,6 @@ class Game:
         textsurface = self.myfont.render(text, False, FONT_COLOR)
         self.screen.blit(textsurface, (50, 50))
 
-
     def play(self):
         circuit = ""
         self.drawing_manager.prepare_new_random_figure()

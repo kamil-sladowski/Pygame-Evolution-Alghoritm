@@ -48,7 +48,6 @@ class Mark:
     def count_mark_of_structure(self):
         points = self.convex_hull_graham(self.figure_pivots)
         circuit = self.count_circuit(points)
-        print("eeee {} {} ".format(self.number_of_all_verticles, len(self.figure_pivots)))
         verts_to_figures = self.number_of_all_verticles/len(self.figure_pivots)
         mark = verts_to_figures * circuit/(2*RADIUS)
         print(mark)
