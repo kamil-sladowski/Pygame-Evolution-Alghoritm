@@ -7,7 +7,6 @@ class DrawingManager:
 
     def __init__(self):
         self.f = Figures()
-        self.f.add()
 
     @staticmethod
     def is_point_in_range(x, y):
@@ -30,20 +29,20 @@ class DrawingManager:
         pol = self.f.polygons_data
         for k, v in pol.items():
             if v.wheel_range[0] < r < v.wheel_range[1]:
-                verticle_num = int(k)
-                self.f.add(pivot_pos, verticle_num)
+                verticles_count = int(k)
+                self.f.add(pivot=pivot_pos, figure_type=verticles_count)
 
     @property
     def elements_num(self):
-        return len(self.f.pivots)
+        return len(self.f.shapes)
 
     @property
-    def pivots(self):
+    def pivots(self) -> list:
         return self.f.pivots
 
     @property
-    def figure_types(self):
-        return self.f.figureType
+    def figure_types(self) -> list:
+        return self.f.figure_types
 
     @property
     def number_of_all_verticles(self):

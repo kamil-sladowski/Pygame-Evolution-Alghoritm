@@ -2,6 +2,7 @@ from functools import reduce
 from math import sqrt
 from consts import RADIUS
 
+
 class Mark:
 
     def __init__(self, drawing_manager):
@@ -46,9 +47,12 @@ class Mark:
         return l.extend(u[i] for i in range(1, len(u) - 1)) or l
 
     def count_mark_of_structure(self):
-        points = self.convex_hull_graham(self.figure_pivots)
-        circuit = self.count_circuit(points)
-        verts_to_figures = self.number_of_all_verticles/len(self.figure_pivots)
-        mark = verts_to_figures * circuit/(2*RADIUS)
+        # points = self.convex_hull_graham(self.figure_pivots)
+        # circuit = self.count_circuit(points)
+        # verts_to_figures = self.number_of_all_verticles/circuit/(2*RADIUS)
+        # mark = verts_to_figures * 1000
+        print(self.number_of_all_verticles)
+        print(self.figure_pivots)
+        mark = self.number_of_all_verticles/len(self.figure_pivots)
         print(mark)
         return str(round(mark))

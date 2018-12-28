@@ -4,8 +4,8 @@ from Game import Game
 from Mark import Mark
 
 
-# d = DrawingManager()
-d = MultipleDrawingManager()
+d = DrawingManager()
+# d = MultipleDrawingManager()
 mark = Mark(d)
 game = Game(d, mark)
 game.play()
