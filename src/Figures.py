@@ -1,60 +1,11 @@
 from random import randint
 from consts import X_MAX, Y_MAX, RADIUS
+from Shape import Shape
+from IdMatrix import IdMatrix
 from recordtype import recordtype
 
 PolygonCharacteristic = recordtype('PolygonsData', 'instance_count, probability, wheel_range')
 
-
-class Shape:
-
-    __count = 0
-
-    @classmethod
-    def _count(cls):
-        Shape.__count += 1
-        return Shape.__count
-
-    def __init__(self, type, pivot):
-        self.id = Shape._count()
-        self.type = type
-        self.pivot = pivot
-
-    def __str__(self):
-        return "ID: {} Type: {} Pivot {}".format(self.id, self.type, self.pivot)
-
-
-class IdMatrix:
-
-    def __init__(self):
-        w, h = int(X_MAX / RADIUS / 2) + 1, int(Y_MAX / RADIUS / 2) + 1
-        self.height = h
-        self.id_matrix = [[0 for _ in range(w)] for _ in range(h)]
-
-    @staticmethod
-    def __normalise_coordinates(pivot):
-        x, y = pivot
-        x = int(x / RADIUS / 2)
-        y = int(y / RADIUS / 2)
-        return x, y
-
-    def add_id(self, id, pivot):
-        x, y = IdMatrix.__normalise_coordinates(pivot)
-        self.id_matrix[y][x] = id
-
-    def print_id_matrix(self):
-        for i in range(self.height):
-            print(self.id_matrix[i])
-
-    def get_neighbours_coordinates(self, pivot):
-        neighbours_coordinates = []
-        steps = [-1, 0, 1]
-        x, y = IdMatrix.__normalise_coordinates(pivot)
-        for i in steps:
-            for j in steps:
-                if i != 0 and j != 0:
-                    xx, yy = x + i, y + j
-                    if self.id_matrix[yy][xx] != 0:
-                        neighbours_coordinates.append((xx, yy))
 
 class Figures:
     range_begin, range_end = (4, 7)
@@ -94,22 +45,30 @@ class Figures:
             if e.id == i:
                 return e
 
-    def add(self, pivot=(X_MAX / 2, Y_MAX / 2), figure_type=4):
+    def add(self, pivot=(int(X_MAX / (4*RADIUS)), int(Y_MAX / (4*RADIUS))), figure_type=4):
         a = Shape(figure_type, pivot)
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
         self.id_matrix.add_id(a.id, pivot)
-        self.id_matrix.print_id_matrix()
+        # self.id_matrix.print_id_matrix()
 
-    def get_neighbours_field(self, coordinates):
-        fields = []
-        for x, y in coordinates:
-            id = self.id_matrix[y][x]
-            field_size = int(self.shapes[id].type)
-            print("field_size")
-            print(field_size)
-            fields.append(field_size)
-        return sum(fields)
+    def count_neighbours_factor(self, parent:Shape, coordinates):
+        factor = 0
+        print("coordinates")
+        print(type(coordinates))
+        if type(coordinates) != tuple:
+            for x, y in coordinates:
+                id = self.id_matrix[y][x]
+                neigh_shape = self.shapes[id]
+                if parent.type == neigh_shape.type:
+                    factor -= int(neigh_shape.type)
+                else:
+                    factor += int(neigh_shape.type)
+
+        print("factor")
+        print(factor)
+        parent.neighbours_field_factor = factor
+        return factor
 
     @property
     def random_pivot(self) -> tuple:
