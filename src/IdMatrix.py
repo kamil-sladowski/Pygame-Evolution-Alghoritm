@@ -5,7 +5,7 @@ from random import choice
 class IdMatrix:
 
     def __init__(self):
-        w, h = int(X_MAX / RADIUS / 2) + 1, int(Y_MAX / RADIUS / 2) + 1
+        w, h = int(X_MAX / RADIUS / 2) + 2, int(Y_MAX / RADIUS / 2) + 2
         self.height = h
         self.id_matrix = [[0 for _ in range(w)] for _ in range(h)]
 

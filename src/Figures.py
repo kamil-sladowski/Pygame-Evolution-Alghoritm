@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, random, choice
 from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
@@ -46,10 +46,22 @@ class Figures:
             if e.id == i:
                 return e
 
+    def mutate(self, shape):
+        r = random()
+        t = shape.type
+        if r > 0.7:
+            t = choice(range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX))
+            shape.type = t
+            return t
+        else:
+            return t
+
     def add(self, pivot=(int(X_MAX / (4*RADIUS)), int(Y_MAX / (4*RADIUS))), figure_type=4):
         a = Shape(figure_type, pivot)
+        figure_type = self.mutate(a)
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
+
         self.id_matrix.add_id(a.id, pivot)
         # self.id_matrix.print_id_matrix()
 
