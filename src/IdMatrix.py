@@ -37,7 +37,6 @@ class IdMatrix:
                 if i != 0 and j != 0:
                     xx, yy = x + i, y + j
                     if self.id_matrix[yy][xx] != 0:
-                        print(self.id_matrix[yy][xx])
                         neighbours_coordinates.append((xx, yy))
         if len(neighbours_coordinates) == 0:
             return x, y

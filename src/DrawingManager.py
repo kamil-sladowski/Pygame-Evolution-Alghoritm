@@ -47,11 +47,27 @@ class DrawingManager:
         neighbour_id = self.f.id_matrix.get_id_by_pivot(neighbour_pivot)
         neighbour_shape = self.f[neighbour_id]
 
-
         herited_type = self.get_herited_type(parent_shape.type, neighbour_shape.type)
         self.f.add(pivot=child_pivot, figure_type=herited_type)
         neighbours_coordinates = self.f.id_matrix.get_neighbours_coordinates(child_pivot)
         self.f.count_neighbours_factor(parent_shape, neighbours_coordinates)
+        f_wheel, f_max = self.f.focuse_wheel()
+
+        kill_factor = int(len(self.f)/4)
+        for _ in range(kill_factor):
+            r = random() / f_max
+            for e, range_begin, range_end in f_wheel:
+                if range_begin < r < range_end:
+                    print("removing:")
+                    print(e)
+                    self.f.remove_shape(e)
+
+        # for
+
+
+    def prepare_neighbours_focuse_wheel(self):
+        for e in self.f.shapes:
+            print(e)
 
     @property
     def elements_num(self):

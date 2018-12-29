@@ -9,7 +9,6 @@ class Game:
     def __init__(self, drawing_manager, mark):
         self.drawing_manager = drawing_manager
         self.mark = mark
-        self.drawed_points = []
         pygame.init()
         self.screen = pygame.display.set_mode((X_MAX, Y_MAX))
         pygame.font.init()
@@ -49,7 +48,7 @@ class Game:
 
             self.print_mark(text=circuit)
             for next_id in range(self.drawing_manager.elements_num):
-                self.drawed_points.append(self.draw_next_ngon(next_id))
+                self.draw_next_ngon(next_id)
             pygame.display.update()
             pygame.event.clear()
 

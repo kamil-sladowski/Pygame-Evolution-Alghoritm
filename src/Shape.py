@@ -14,6 +14,9 @@ class Shape:
         self.type = type
         self.pivot = pivot
 
+    # def __del__(self):
+
+
     def __str__(self):
-        return "ID: {} Type: {} Pivot {} Factor".format(
+        return "ID: {} Type: {} Pivot {} Factor {}".format(
             self.id, self.type, self.pivot, self.neighbours_field_factor)

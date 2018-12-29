@@ -4,6 +4,7 @@ from Shape import Shape
 from IdMatrix import IdMatrix
 from recordtype import recordtype
 from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX
+from copy import deepcopy
 
 PolygonCharacteristic = recordtype('PolygonsData', 'instance_count, probability, wheel_range')
 
@@ -61,13 +62,32 @@ class Figures:
         figure_type = self.mutate(a)
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
-
         self.id_matrix.add_id(a.id, pivot)
         # self.id_matrix.print_id_matrix()
 
+    def remove_shape(self, shape):
+        print(shape)
+        shape_copy = deepcopy(shape)
+        self.polygons_data[str(shape_copy.type)].instance_count -= 1
+        self.shapes.remove(shape)
+
+    def focuse_wheel(self):
+        f_max = 0
+        wheel = []
+        for e in self.shapes:
+            f_max += e.neighbours_field_factor
+        # print("F_max")
+        # print(f_max)
+        previous = 0
+        for e in self.shapes:
+            wheel.append((e, previous, previous + e.neighbours_field_factor/f_max))
+            # print(e.neighbours_field_factor/f_max)
+
+        return wheel, f_max
+
     def count_neighbours_factor(self, parent:Shape, coordinates):
         factor = SHAPE_TYPE_MAX * 8
-        if type(coordinates) != tuple:
+        try:
             for x, y in coordinates:
                 id = self.id_matrix.id_matrix[y][x]
                 neigh_shape = self.shapes[id]
@@ -75,11 +95,13 @@ class Figures:
                     factor -= int(neigh_shape.type)
                 else:
                     factor += int(neigh_shape.type)
-
-        print("factor")
-        print(factor)
-        parent.neighbours_field_factor = factor
-        return factor
+        except TypeError:
+            pass
+        finally:
+            print("factor")
+            print(factor)
+            parent.neighbours_field_factor = factor
+            return factor
 
     @property
     def random_pivot(self) -> tuple:
