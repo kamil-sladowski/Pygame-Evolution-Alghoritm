@@ -26,20 +26,35 @@ class Shape:
 class IdMatrix:
 
     def __init__(self):
-        w, h = int(X_MAX / RADIUS / 2), int(Y_MAX / RADIUS / 2)
+        w, h = int(X_MAX / RADIUS / 2) + 1, int(Y_MAX / RADIUS / 2) + 1
         self.height = h
         self.id_matrix = [[0 for _ in range(w)] for _ in range(h)]
 
-    def add_id(self, id, pivot):
+    @staticmethod
+    def __normalise_coordinates(pivot):
         x, y = pivot
-        x = int(x / RADIUS / 2) - 1
-        y = int(y / RADIUS / 2) - 1
-        self.id_matrix[x][y] = id
+        x = int(x / RADIUS / 2)
+        y = int(y / RADIUS / 2)
+        return x, y
+
+    def add_id(self, id, pivot):
+        x, y = IdMatrix.__normalise_coordinates(pivot)
+        self.id_matrix[y][x] = id
 
     def print_id_matrix(self):
         for i in range(self.height):
             print(self.id_matrix[i])
 
+    def get_neighbours_coordinates(self, pivot):
+        neighbours_coordinates = []
+        steps = [-1, 0, 1]
+        x, y = IdMatrix.__normalise_coordinates(pivot)
+        for i in steps:
+            for j in steps:
+                if i != 0 and j != 0:
+                    xx, yy = x + i, y + j
+                    if self.id_matrix[yy][xx] != 0:
+                        neighbours_coordinates.append((xx, yy))
 
 class Figures:
     range_begin, range_end = (4, 7)
@@ -86,13 +101,20 @@ class Figures:
         self.id_matrix.add_id(a.id, pivot)
         self.id_matrix.print_id_matrix()
 
+    def get_neighbours_field(self, coordinates):
+        fields = []
+        for x, y in coordinates:
+            id = self.id_matrix[y][x]
+            field_size = int(self.shapes[id].type)
+            print("field_size")
+            print(field_size)
+            fields.append(field_size)
+        return sum(fields)
+
     @property
     def random_pivot(self) -> tuple:
         id = randint(0, len(self.shapes) - 1)
         return self.shapes[id].pivot
-
-    def get_neighbours(self, curr_id):
-        pass
 
     @property
     def number_of_all_verticles(self) -> int:
