@@ -14,14 +14,15 @@ class DrawingManager:
             return False
         return True
 
-    def __count_new_pivot(self, random_pivot):
+    def __count_new_pivot(self, ):
         while True:
-            x, y = random_pivot
-            new_x = x + 2 * getrandbits(1) * choice([-1, 1])
-            new_y = y + 2 * getrandbits(1) * choice([-1, 1])
-            if self.is_point_in_range(new_x, new_y) and (not (new_x, new_y) in self.f.pivots):
+            x, y = self.f.random_pivot
+            new_x = x +  getrandbits(1) * choice([-1, 1])
+            new_y = y +  getrandbits(1) * choice([-1, 1])
+            if self.is_point_in_range(new_x, new_y) and (self.f.id_matrix.id_matrix[new_y][new_x] == 0):
                 print("NEW PAIR: {}  :  {}".format(new_x, new_y))
-                return int(new_x), int(new_y)
+                return (int(new_x), int(new_y)), (x, y)
+
 
     def prepare_new_random_figure(self):
         pass
@@ -38,6 +39,7 @@ class DrawingManager:
 
     def count_shape_factor_based_on_neighbours(self):
         parent_pivot = self.f.random_pivot
+        child_pivot, parent_pivot = self.__count_new_pivot()
         parent_id = self.f.id_matrix.get_id_by_pivot(parent_pivot)
         parent_shape = self.f[parent_id]
 
@@ -46,7 +48,6 @@ class DrawingManager:
         neighbour_shape = self.f[neighbour_id]
 
 
-        child_pivot = self.__count_new_pivot(parent_pivot)
         herited_type = self.get_herited_type(parent_shape.type, neighbour_shape.type)
         self.f.add(pivot=child_pivot, figure_type=herited_type)
         neighbours_coordinates = self.f.id_matrix.get_neighbours_coordinates(child_pivot)

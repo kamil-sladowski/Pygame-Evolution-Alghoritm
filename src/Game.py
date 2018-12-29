@@ -56,8 +56,8 @@ class Game:
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14
         x, y = self.next_pivot[next_id]
-        x *= RADIUS *2
-        y *= RADIUS *2
+        x *= RADIUS * 2
+        y *= RADIUS * 2
         vert_num = self.drawing_manager.figure_types[next_id]
         for i in range(0, vert_num):
             pygame.draw.line(self.screen, COLOR1, (x,y),

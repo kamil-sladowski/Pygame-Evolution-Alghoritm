@@ -3,12 +3,13 @@ from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
 from recordtype import recordtype
+from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX
 
 PolygonCharacteristic = recordtype('PolygonsData', 'instance_count, probability, wheel_range')
 
 
 class Figures:
-    range_begin, range_end = (4, 7)
+    range_begin, range_end = (SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
     shapes = []
     polygons_data = {}
 
@@ -53,12 +54,10 @@ class Figures:
         # self.id_matrix.print_id_matrix()
 
     def count_neighbours_factor(self, parent:Shape, coordinates):
-        factor = 0
-        print("coordinates")
-        print(type(coordinates))
+        factor = SHAPE_TYPE_MAX * 8
         if type(coordinates) != tuple:
             for x, y in coordinates:
-                id = self.id_matrix[y][x]
+                id = self.id_matrix.id_matrix[y][x]
                 neigh_shape = self.shapes[id]
                 if parent.type == neigh_shape.type:
                     factor -= int(neigh_shape.type)
