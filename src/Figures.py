@@ -1,4 +1,4 @@
-from random import randint, random, choice
+from random import randint, random, choice, shuffle
 from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
@@ -47,14 +47,22 @@ class Figures:
     def mutate(shape):
         r = random()
         t = shape.type
+        mutation_types = [t-2, t-1, t, t+1, t+2]
         if r > MUTATION_PROPABILITY:
-            t = choice(range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX))
-            shape.type = t
-            return t
-        else:
-            return t
+            while True:
+                try:
+                    shuffle(mutation_types)
+                    t = choice([mutation_types[0], mutation_types[1]])
+                    assert t in range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
+                    shape.type = t
+                    return t
+                except KeyError:
+                    pass
+                except AssertionError:
+                    pass
+        return t
 
-    def add(self, pivot=(int(X_MAX / (4*RADIUS)), int(Y_MAX / (4*RADIUS))), figure_type=4):
+    def add(self, pivot=(int(X_MAX / (4*RADIUS)), int(Y_MAX / (4*RADIUS))), figure_type=int(SHAPE_TYPE_MAX/2)):
         a = Shape(figure_type, pivot)
         figure_type = self.mutate(a)
         self.shapes.append(a)
