@@ -90,7 +90,7 @@ class Figures:
 
         return wheel, f_max
 
-    def count_neighbours_factor(self, parent:Shape, coordinates):
+    def count_neighbours_factor(self, parent:Shape, coordinates): # todo restrictive factor
         factor = SHAPE_TYPE_MAX * 8
         try:
             for x, y in coordinates:
