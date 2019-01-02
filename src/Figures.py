@@ -3,7 +3,7 @@ from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
 from recordtype import recordtype
-from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX
+from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX, MUTATION_PROPABILITY
 from copy import deepcopy
 
 PolygonCharacteristic = recordtype('PolygonsData', 'instance_count, probability, wheel_range')
@@ -38,19 +38,16 @@ class Figures:
     def __len__(self):
         return len(self.shapes)
 
-    # def __iter__(self):
-    #     for f in self.shapes:
-    #         yield f.id, f.pivot, f.type
-
     def __getitem__(self, i) -> Shape:
         for e in self.shapes:
             if e.id == i:
                 return e
 
-    def mutate(self, shape):
+    @staticmethod
+    def mutate(shape):
         r = random()
         t = shape.type
-        if r > 0.7:
+        if r > MUTATION_PROPABILITY:
             t = choice(range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX))
             shape.type = t
             return t
@@ -66,22 +63,22 @@ class Figures:
         # self.id_matrix.print_id_matrix()
 
     def remove_shape(self, shape):
-        print(shape)
-        shape_copy = deepcopy(shape)
-        self.polygons_data[str(shape_copy.type)].instance_count -= 1
-        self.shapes.remove(shape)
+        try:
+            shape_copy = deepcopy(shape)
+            self.polygons_data[str(shape_copy.type)].instance_count -= 1
+            self.id_matrix.remove_id(shape)
+            self.shapes.remove(shape)
+        except ValueError:
+            pass
 
     def focuse_wheel(self):
         f_max = 0
         wheel = []
         for e in self.shapes:
             f_max += e.neighbours_field_factor
-        # print("F_max")
-        # print(f_max)
         previous = 0
         for e in self.shapes:
             wheel.append((e, previous, previous + e.neighbours_field_factor/f_max))
-            # print(e.neighbours_field_factor/f_max)
 
         return wheel, f_max
 
@@ -98,8 +95,6 @@ class Figures:
         except TypeError:
             pass
         finally:
-            print("factor")
-            print(factor)
             parent.neighbours_field_factor = factor
             return factor
 

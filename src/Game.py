@@ -1,7 +1,8 @@
 import sys
 import pygame
 from math import sin, cos
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR
+from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR, NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX
+from random import choice
 
 
 class Game:
@@ -29,19 +30,20 @@ class Game:
         self.screen.blit(text_surface, (50, 50))
 
     def evolution(self):
-        self.drawing_manager.count_shape_factor_based_on_neighbours()
-        self.drawing_manager.prepare_new_random_figure()
+        new_population_size = choice(range(NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX))
+        for _ in range(new_population_size):
+            self.drawing_manager.count_shape_factor_based_on_neighbours()
+        self.drawing_manager.kill_series()
+
 
     def play(self):
         circuit = ""
-        self.drawing_manager.prepare_new_random_figure()
 
         while True:
             event = pygame.event.wait()
             self.__check_quit(event)
 
             if pygame.mouse.get_pressed()[0]:
-                print("mouse button pressed")
                 self.evolution()
             if pygame.mouse.get_pressed()[2]:
                 circuit = self.mark.count_mark_of_structure()

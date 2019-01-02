@@ -49,4 +49,6 @@ class IdMatrix:
         else:
             return arr
 
-
+    def remove_id(self, shape):
+        x, y = shape.pivot
+        self.id_matrix[y][x] = 0
