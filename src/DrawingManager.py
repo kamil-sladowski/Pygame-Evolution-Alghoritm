@@ -21,7 +21,7 @@ class DrawingManager:
             x, y = self.f.random_pivot
             new_x = x + getrandbits(1) * choice([-1, 1])
             new_y = y + getrandbits(1) * choice([-1, 1])
-            if self.is_point_in_range(new_x, new_y) and (self.f.id_matrix.id_matrix[new_y][new_x] == 0):
+            if self.is_point_in_range(new_x, new_y) and (self.f.id_matrix.matrix[new_y][new_x] == 0): # todo matrix[x, y]
                 return (int(new_x), int(new_y)), (x, y)
 
     @staticmethod

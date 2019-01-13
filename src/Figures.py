@@ -2,6 +2,8 @@ from random import randint, random, choice, shuffle
 from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
+from IslandMatrix import IslandMatrix
+from FigureMatrix import FigureMatrix
 from recordtype import recordtype
 from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX, MUTATION_PROPABILITY
 from copy import deepcopy
@@ -13,6 +15,13 @@ class Figures:
     range_begin, range_end = (SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
     shapes = []
     polygons_data = {}
+
+    def __init__(self):
+        self.figure_matrix = FigureMatrix()
+        self.id_matrix = IdMatrix(self.figure_matrix)
+        self.island_matrix = IslandMatrix(self.id_matrix)
+        self.__take_polygon_characteristics()
+        self.add()
 
     def __generate_polygon_characteristic(self):
         probability = 1 / len(range(self.range_begin, self.range_end + 1))
@@ -29,11 +38,6 @@ class Figures:
         polygon_generator = self.__generate_polygon_characteristic()
         for i in range(self.range_begin, self.range_end + 1):
             self.polygons_data[str(i)] = next(polygon_generator)
-
-    def __init__(self):
-        self.id_matrix = IdMatrix()
-        self.__take_polygon_characteristics()
-        self.add()
 
     def __len__(self):
         return len(self.shapes)
@@ -67,8 +71,10 @@ class Figures:
         # figure_type = self.mutate(a)
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
-        self.id_matrix.add_id(a.id, pivot)
-        # self.id_matrix.print_id_matrix()
+        self.id_matrix.add_id(a)
+        # print(self.island_matrix.countIslands())
+        self.island_matrix.print_matrix()
+        self.figure_matrix.print_matrix()
 
     def remove_shape(self, shape):
         try:
