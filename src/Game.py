@@ -32,8 +32,8 @@ class Game:
     def evolution(self):
         new_population_size = choice(range(NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX))
         for _ in range(new_population_size):
-            self.drawing_manager.count_shape_factor_based_on_neighbours()
-        self.drawing_manager.kill_series()
+            self.drawing_manager.create_new_object()
+        # self.drawing_manager.kill_series()
 
 
     def play(self):

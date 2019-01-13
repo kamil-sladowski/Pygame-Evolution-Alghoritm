@@ -43,28 +43,28 @@ class Figures:
             if e.id == i:
                 return e
 
-    @staticmethod
-    def mutate(shape):
-        r = random()
-        t = shape.type
-        mutation_types = [t-2, t-1, t, t+1, t+2]
-        if r > MUTATION_PROPABILITY:
-            while True:
-                try:
-                    shuffle(mutation_types)
-                    t = choice([mutation_types[0], mutation_types[1]])
-                    assert t in range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
-                    shape.type = t
-                    return t
-                except KeyError:
-                    pass
-                except AssertionError:
-                    pass
-        return t
+    # @staticmethod
+    # def mutate(shape):
+    #     r = random()
+    #     t = shape.type
+    #     mutation_types = [t-1, t, t+1,]
+    #     if r > MUTATION_PROPABILITY:
+    #         while True:
+    #             try:
+    #                 shuffle(mutation_types)
+    #                 t = choice([mutation_types[0], mutation_types[1]])
+    #                 assert t in range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
+    #                 shape.type = t
+    #                 return t
+    #             except KeyError:
+    #                 pass
+    #             except AssertionError:
+    #                 pass
+    #     return t
 
     def add(self, pivot=(int(X_MAX / (4*RADIUS)), int(Y_MAX / (4*RADIUS))), figure_type=int(SHAPE_TYPE_MAX/2)):
         a = Shape(figure_type, pivot)
-        figure_type = self.mutate(a)
+        # figure_type = self.mutate(a)
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
         self.id_matrix.add_id(a.id, pivot)

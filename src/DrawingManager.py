@@ -28,7 +28,7 @@ class DrawingManager:
     def get_herited_type(type_1, type_2):
         return choice([type_1, type_2])
 
-    def count_shape_factor_based_on_neighbours(self):
+    def create_new_object(self):
         child_pivot, parent_pivot = self.__count_new_pivot()
         parent_id = self.f.id_matrix.get_id_by_pivot(parent_pivot)
         parent_shape = self.f[parent_id]
@@ -37,21 +37,22 @@ class DrawingManager:
         neighbour_id = self.f.id_matrix.get_id_by_pivot(neighbour_pivot)
         neighbour_shape = self.f[neighbour_id]
         herited_type = self.get_herited_type(parent_shape.type, neighbour_shape.type)
+
         self.f.add(pivot=child_pivot, figure_type=herited_type)
         neighbours_coordinates = self.f.id_matrix.get_neighbours_coordinates(child_pivot)
         self.f.count_neighbours_factor(parent_shape, neighbours_coordinates)
         self.f_wheel, self.f_max = self.f.focuse_wheel()
 
-    def kill_series(self):
-        kill_propability = random()
-
-        if kill_propability > KILL_PROPABILITY:
-            kill_factor = int(len(self.f)/4)
-            for _ in range(kill_factor):
-                r = random() / self.f_max
-                for e, range_begin, range_end in self.f_wheel:
-                    if range_begin < r < range_end:
-                        self.f.remove_shape(e)
+    # def kill_series(self):
+    #     kill_propability = random()
+    #
+    #     if kill_propability > KILL_PROPABILITY:
+    #         kill_factor = int(len(self.f)/4)
+    #         for _ in range(kill_factor):
+    #             r = random() / self.f_max
+    #             for e, range_begin, range_end in self.f_wheel:
+    #                 if range_begin < r < range_end:
+    #                     self.f.remove_shape(e)
 
     @property
     def elements_num(self):
