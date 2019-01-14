@@ -5,51 +5,47 @@ from random import choice, shuffle
 
 class IslandMatrix(Matrix):
 
-    def __init__(self, idMatrix):
+    def __init__(self, idMatrix, figure_matrix):
         super().__init__()
         self.idMatrix = idMatrix
+        self.figure_matrix = figure_matrix
 
-
-        # A function to check if a given cell
-
-    # (row, col) can be included in DFS
     def isSafe(self, i, j, visited):
-        # row number is in range, column number
-        # is in range and value is 1
-        # and not yet visited
-        return (i >= 0 and i < self.height and
-                j >= 0 and j < self.width and
+        return (0 <= i < self.height and
+                0 <= j < self.width and
                 not visited[i][j] and self.idMatrix[i, j])
 
-        # A utility function to do DFS for a 2D
+    def is_the_same_figure(self, i, j, prev_figure):
+        return prev_figure == self.figure_matrix[i, j]
 
-    # boolean matrix. It only considers
-    # the 8 neighbours as adjacent vertices
-    def DFS(self, i, j, visited, prev_figure):
+    def DFS(self, i, j, visited, prev_figure, prev_num):
 
-        # These arrays are used to get row and
-        # column numbers of 8 neighbours
-        # of a given cell
-        rowNbr = [-1, -1, -1, 0, 0, 1, 1, 1];
-        colNbr = [-1, 0, 1, -1, 1, -1, 0, 1];
+        rowNbr = [-1, -1, -1, 0, 0, 1, 1, 1]
+        colNbr = [-1, 0, 1, -1, 1, -1, 0, 1]
 
         # Mark this cell as visited
 
         visited[i][j] = True
-        self.matrix[i][j] = prev_figure
+        self.matrix[i][j] = prev_num
 
         # Recur for all connected neighbours
         for k in range(8):
             if self.isSafe(i + rowNbr[k], j + colNbr[k], visited):
-                self.DFS(i + rowNbr[k], j + colNbr[k], visited, prev_figure)
+                if self.is_the_same_figure(i + rowNbr[k], j + colNbr[k], prev_figure):
+                    self.DFS(i + rowNbr[k], j + colNbr[k], visited, prev_figure, prev_num)
+                else:
+                    prev_figure = self.figure_matrix[i, j]
+                    self.DFS(i + rowNbr[k], j + colNbr[k], visited, prev_figure, prev_num + 1)
 
-                # The main function that returns
+                    # The main function that returns
 
     # count of islands in a given boolean
     # 2D matrix
-    def countIslands(self):
+    def count_islands(self):
         # Make a bool array to mark visited cells.
         # Initially all cells are unvisited
+        prev_figure = 0
+        prev_num = 0
         visited = [[False for j in range(self.width)] for i in range(self.height)]
 
         # Initialize count as 0 and travese
@@ -60,14 +56,16 @@ class IslandMatrix(Matrix):
             for y in range(self.height):
                 # If a cell with value 1 is not visited yet,
                 # then new island found
-                print(visited[0][0])
-                if visited[y][x] == False and self.idMatrix[x, y] > 1: # num
-                    # Visit all cells in this island
-                    # and increment island count
-                    self.DFS(x, y, visited, self.idMatrix[x, y])
-                    count += 1
-        return count
+                if visited[y][x] == False and self.idMatrix[x, y] > 1:  # num
 
+                    # if prev_figure == self.figure_matrix[x, y]:
+                    self.DFS(x, y, visited, prev_figure, prev_num)
+                    # else:
+                    #     self.DFS(x, y, visited, prev_figure, prev_num + 1)
+                    count += 1
+        print("count")
+        print(count)
+        return count
 
 # g = IslandMatrix()
 # g.countIslands()

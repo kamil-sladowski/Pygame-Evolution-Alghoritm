@@ -44,7 +44,7 @@ class DrawingManager:
         self.f_wheel, self.f_max = self.f.focuse_wheel()
 
     # def kill_series(self):
-    #     kill_propability = random()
+    #     kill_pr   opability = random()
     #
     #     if kill_propability > KILL_PROPABILITY:
     #         kill_factor = int(len(self.f)/4)

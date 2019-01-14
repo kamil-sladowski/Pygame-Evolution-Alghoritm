@@ -19,9 +19,10 @@ class Figures:
     def __init__(self):
         self.figure_matrix = FigureMatrix()
         self.id_matrix = IdMatrix(self.figure_matrix)
-        self.island_matrix = IslandMatrix(self.id_matrix)
+        self.island_matrix = IslandMatrix(self.id_matrix, self.figure_matrix)
         self.__take_polygon_characteristics()
         self.add()
+        self.island_matrix.count_islands()
 
     def __generate_polygon_characteristic(self):
         probability = 1 / len(range(self.range_begin, self.range_end + 1))
@@ -72,7 +73,7 @@ class Figures:
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
         self.id_matrix.add_id(a)
-        # print(self.island_matrix.countIslands())
+        self.island_matrix.count_islands()
         self.island_matrix.print_matrix()
         self.figure_matrix.print_matrix()
 

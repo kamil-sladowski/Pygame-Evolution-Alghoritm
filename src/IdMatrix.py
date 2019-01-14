@@ -14,8 +14,6 @@ class IdMatrix(Matrix):
     def add_id(self, shape):
         x, y = shape.pivot
         self.matrix[y][x] = shape.id
-        print("setting")
-        print(shape.type)
         self.figure_matrix.set_type(x, y, shape.type)
 
     def get_id_by_pivot(self, pivot):
@@ -25,9 +23,9 @@ class IdMatrix(Matrix):
     def remove_id(self, shape):
         x, y = shape.pivot
         self.matrix[y][x] = 0
-        self.figure_matrix[y][x] = 0
+        self.figure_matrix.set_type(x, y, 0)
 
     def __getitem__(self, pos):
         x, y = pos
-        return self.matrix.set_type(x, y, 0)
+        return self.matrix[y][x]
 
