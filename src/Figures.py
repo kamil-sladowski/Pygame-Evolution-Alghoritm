@@ -58,7 +58,7 @@ class Figures:
 
     def __count_new_pivot(self, ):
         while True:
-            x, y = self.f.random_pivot
+            x, y = self.random_pivot
             new_x = x + getrandbits(1) * choice([-1, 1])
             new_y = y + getrandbits(1) * choice([-1, 1])
             if self.is_point_in_range(new_x, new_y) and (self.id_matrix.matrix[new_y][new_x] == 0): # todo matrix[x, y]
@@ -71,20 +71,29 @@ class Figures:
     def evolution(self):
         self.island_matrix.detect_islands()
         number_of_islands = self.island_matrix.get_number_of_islands()
-        self.island_matrix.calc_island_statistics()
+        if number_of_islands > 1:
+            self.island_matrix.calc_island_statistics()
 
-        island_ids = [i+1 for i in range(number_of_islands)]
-        shuffle(island_ids)
-        for i in range(0, number_of_islands, 2):
-            # p = (island_ids[i], island_ids[i+1])
-            for i in range(choice([1,2,3])):
+            island_ids = [i+1 for i in range(number_of_islands)]
+            shuffle(island_ids)
+            for i in range(0, number_of_islands, 2):
                 try:
-                    child_type = self.island_matrix.deduce_child_type(island_ids[i], island_ids[i+1])
-                    self.create_new_object(child_type)
+                    for _ in range(choice([1,2,3])):
+                        child_type = self.island_matrix.deduce_child_type(island_ids[i], island_ids[i+1])
+                        self.create_new_object(child_type)
                 except IndexError:
                     pass
 
+            self.island_matrix.detect_islands()
+            self.island_matrix.calc_island_statistics()
+            islands_to_delete = self.island_matrix.get_islands_to_kill()
+            print("islands_to_delete")
+            print(islands_to_delete)
+            for id in islands_to_delete:
+                self.id_matrix.remove_id(id)
 
+        else:
+            self.create_new_object(choice([4,5,6,7,8,9]))
 
 
 
@@ -125,32 +134,21 @@ class Figures:
         except ValueError:
             pass
 
-    def focuse_wheel(self):
-        f_max = 0
-        wheel = []
-        for e in self.shapes:
-            f_max += e.neighbours_field_factor
-        previous = 0
-        for e in self.shapes:
-            wheel.append((e, previous, previous + e.neighbours_field_factor/f_max))
-
-        return wheel, f_max
-
-    def count_neighbours_factor(self, parent:Shape, coordinates): # todo restrictive factor
-        factor = SHAPE_TYPE_MAX * 8
-        try:
-            for x, y in coordinates:
-                id = self.id_matrix.id_matrix[y][x]
-                neigh_shape = self.shapes[id]
-                if parent.type == neigh_shape.type:
-                    factor -= int(neigh_shape.type)
-                else:
-                    factor += int(neigh_shape.type)
-        except TypeError:
-            pass
-        finally:
-            parent.neighbours_field_factor = factor
-            return factor
+    # def count_neighbours_factor(self, parent:Shape, coordinates): # todo restrictive factor
+    #     factor = SHAPE_TYPE_MAX * 8
+    #     try:
+    #         for x, y in coordinates:
+    #             id = self.id_matrix.id_matrix[y][x]
+    #             neigh_shape = self.shapes[id]
+    #             if parent.type == neigh_shape.type:
+    #                 factor -= int(neigh_shape.type)
+    #             else:
+    #                 factor += int(neigh_shape.type)
+    #     except TypeError:
+    #         pass
+    #     finally:
+    #         parent.neighbours_field_factor = factor
+    #         return factor
 
     @property
     def random_pivot(self) -> tuple:

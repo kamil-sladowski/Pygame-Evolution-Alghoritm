@@ -1,6 +1,6 @@
 from Matrix import Matrix
 from consts import X_MAX, Y_MAX, RADIUS
-from random import choice, shuffle
+from random import choice, shuffle, random
 from recordtype import recordtype
 
 # = ([list of id], type, amount, fittness)
@@ -51,56 +51,59 @@ class IslandMatrix(Matrix):
                 if visited[y][x] is False and self.idMatrix[x, y] > 1:
                     prev_figure = self.figure_matrix[x, y]
                     prev_num = self.DFS(x, y, visited, prev_figure, prev_num)
-
-        self.islands_num = prev_num
+                    self.islands_num = prev_num
 
     def calc_island_statistics(self):
-        islands = {}
+        self.islands = {}
         for i in range(self.islands_num):
             # = ([list of id], type, amount, fittness)
-            islands[i + 1] = Island(ids=[], type=3, amount=0, fitness=0)
+            self.islands[i + 1] = Island(ids=[], type=3, amount=0, fitness=0)
 
         for x in range(self.width):
             for y in range(self.height):
                 num = self.matrix[y][x]
                 type = self.figure_matrix[x, y]
                 if num is not 0 and type !=0:
-                    islands[num].ids.append(num)
-                    islands[num].type = type
-                    islands[num].amount += 1
-                    islands[num].fitness += type * islands[num].amount
+                    self.islands[num].ids.append(num)
+                    self.islands[num].type = type
+                    self.islands[num].amount += 1
+                    self.islands[num].fitness += type * self.islands[num].amount
 
     def deduce_child_type(self, id_1, id_2):
-        return choice([self.islands[id_1], self.islands[id_2]])
+        return choice([self.islands[id_1].type, self.islands[id_2].type])
 
-    def delete_island(self):
+    def delete_island(self, island):
         pass
 
     def get_number_of_islands(self):
         return self.islands_num
 
-    # def calc_fitness_function(self):
-    #     for i in range(self.islands_num):
-    #     return 0
+    def fitness_wheel(self):
+        f_max = 0
+        wheel = []
+        print("self.islands_num")
+        print(self.islands_num)
+        for num in range(self.islands_num):
+            f_max += self.islands[num +1].fitness
+        previous = 0
+        for num in range(1, self.islands_num):
+            wheel.append((self.islands[num +1].ids, previous, previous + self.islands[num +1].fitness/f_max))
+            previous = previous + self.islands[num +1].fitness / f_max
 
-# def get_free_space(self, first_parent_pivot,  size=3):
-#     new_free_space = []
-#     f_x, f_y = first_parent_pivot
-#     x_possibility = [f_x, f_x +1, f_x -1, f_x +2, f_x-2]
-#     y_possibility = [f_y, f_y +1, f_y -1, f_y +2, f_y-2]
-#     shuffle(x_possibility)
-#     shuffle(y_possibility)
-#     for new_x in x_possibility:
-#         for new_y in y_possibility:
-#             if self.id_matrix[new_y][new_x] == 0:
-#                 space_size = 1
-#                 x_opt = [-1, 0, 1]
-#                 y_opt = [-1, 0, 1]
-#                 for n_x in x_opt:
-#                     for n_y in y_opt:
-#                         if space_size < size and n_x != n_y and n_x !=0:
-#                             if self.id_matrix[n_y][n_x] == 0:
-#                                 new_free_space.append((n_x, n_y))
-#                                 space_size +=1
-#                 new_free_space.append((new_x, new_y))
-#     return new_free_space
+        return wheel, f_max
+
+    def get_islands_to_kill(self):
+        how_much_kill = choice(range(0, int(self.islands_num/2)))
+        print("how_much_kill")
+        print(how_much_kill)
+        islands_to_delete = set()
+        wheel, f_max = self.fitness_wheel()
+        for _ in range(how_much_kill):
+            t = random()/f_max
+            for w_record in wheel:
+                if t < w_record[2]:
+                    for id in w_record[0]:
+                        islands_to_delete.add(id)
+                    break
+        return islands_to_delete
+
