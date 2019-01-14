@@ -30,11 +30,11 @@ class Game:
         self.screen.blit(text_surface, (50, 50))
 
     def evolution(self):
-        new_population_size = choice(range(NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX))
-        for _ in range(new_population_size):
-            self.drawing_manager.create_new_object()
+        # new_population_size = choice(range(NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX))
+        # for _ in range(new_population_size):
+        #     self.drawing_manager.create_new_object()
         # self.drawing_manager.kill_series()
-
+        self.drawing_manager.f.evolution()
 
     def play(self):
         circuit = ""

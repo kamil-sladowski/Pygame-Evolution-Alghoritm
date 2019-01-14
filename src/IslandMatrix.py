@@ -1,6 +1,10 @@
 from Matrix import Matrix
 from consts import X_MAX, Y_MAX, RADIUS
 from random import choice, shuffle
+from recordtype import recordtype
+
+# = ([list of id], type, amount, fittness)
+Island = recordtype('Island', 'ids type amount fitness')
 
 
 class IslandMatrix(Matrix):
@@ -9,6 +13,7 @@ class IslandMatrix(Matrix):
         super().__init__()
         self.idMatrix = idMatrix
         self.figure_matrix = figure_matrix
+        self.islands_num = 1
 
     def isSafe(self, x, y, visited):
         return (0 <= y < self.height and
@@ -47,7 +52,36 @@ class IslandMatrix(Matrix):
                     prev_figure = self.figure_matrix[x, y]
                     prev_num = self.DFS(x, y, visited, prev_figure, prev_num)
 
+        self.islands_num = prev_num
 
+    def calc_island_statistics(self):
+        islands = {}
+        for i in range(self.islands_num):
+            # = ([list of id], type, amount, fittness)
+            islands[i + 1] = Island(ids=[], type=3, amount=0, fitness=0)
+
+        for x in range(self.width):
+            for y in range(self.height):
+                num = self.matrix[y][x]
+                type = self.figure_matrix[x, y]
+                if num is not 0 and type !=0:
+                    islands[num].ids.append(num)
+                    islands[num].type = type
+                    islands[num].amount += 1
+                    islands[num].fitness += type * islands[num].amount
+
+    def deduce_child_type(self, id_1, id_2):
+        return choice([self.islands[id_1], self.islands[id_2]])
+
+    def delete_island(self):
+        pass
+
+    def get_number_of_islands(self):
+        return self.islands_num
+
+    # def calc_fitness_function(self):
+    #     for i in range(self.islands_num):
+    #     return 0
 
 # def get_free_space(self, first_parent_pivot,  size=3):
 #     new_free_space = []

@@ -1,4 +1,4 @@
-from random import randint, random, choice, shuffle
+from random import randint, random, choice, shuffle, getrandbits
 from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
@@ -49,6 +49,44 @@ class Figures:
         for e in self.shapes:
             if e.id == i:
                 return e
+
+    @staticmethod
+    def is_point_in_range(x, y):
+        if x > X_MAX/(2*RADIUS) or x < 0 or y > Y_MAX/(2*RADIUS) or y < 0:
+            return False
+        return True
+
+    def __count_new_pivot(self, ):
+        while True:
+            x, y = self.f.random_pivot
+            new_x = x + getrandbits(1) * choice([-1, 1])
+            new_y = y + getrandbits(1) * choice([-1, 1])
+            if self.is_point_in_range(new_x, new_y) and (self.id_matrix.matrix[new_y][new_x] == 0): # todo matrix[x, y]
+                return (int(new_x), int(new_y)), (x, y)
+
+    def create_new_object(self, herited_type):
+        child_pivot, parent_pivot = self.__count_new_pivot()
+        self.add(pivot=child_pivot, figure_type=herited_type)
+
+    def evolution(self):
+        self.island_matrix.detect_islands()
+        number_of_islands = self.island_matrix.get_number_of_islands()
+        self.island_matrix.calc_island_statistics()
+
+        island_ids = [i+1 for i in range(number_of_islands)]
+        shuffle(island_ids)
+        for i in range(0, number_of_islands, 2):
+            # p = (island_ids[i], island_ids[i+1])
+            for i in range(choice([1,2,3])):
+                try:
+                    child_type = self.island_matrix.deduce_child_type(island_ids[i], island_ids[i+1])
+                    self.create_new_object(child_type)
+                except IndexError:
+                    pass
+
+
+
+
 
     # @staticmethod
     # def mutate(shape):

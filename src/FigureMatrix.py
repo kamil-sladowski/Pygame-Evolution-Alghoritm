@@ -11,6 +11,7 @@ class FigureMatrix(Matrix):
         self.matrix[y][x] = type
 
     def __getitem__(self, pos):
+
         x, y = pos
         return self.matrix[y][x]
 
