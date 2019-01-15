@@ -92,18 +92,52 @@ class IslandMatrix(Matrix):
 
         return wheel, f_max
 
+    def find_in_wheel(self, t, w_record):
+        islands_to_delete = set()
+        if w_record[1] < t < w_record[2]:
+
+            for id in w_record[0]:
+                print("id")
+                print(id)
+                islands_to_delete.add(id)
+            return islands_to_delete
+        else:
+            return -1
+
+
+
+
     def get_islands_to_kill(self):
         how_much_kill = choice(range(0, int(self.islands_num/2)))
         print("how_much_kill")
         print(how_much_kill)
         islands_to_delete = set()
         wheel, f_max = self.fitness_wheel()
+        print("wheel")
+        print(wheel)
         for _ in range(how_much_kill):
-            t = random()/f_max
-            for w_record in wheel:
-                if t < w_record[2]:
-                    for id in w_record[0]:
-                        islands_to_delete.add(id)
-                    break
+            t = random()
+            print("t")
+            print(t)
+            print("records")
+            found = list(map(lambda w_record: self.find_in_wheel(t, w_record), wheel))
+            found = list(filter(lambda x: x != -1, found))
+            print("found")
+            print(found)
+            # print("{} : {}").format(wheel[i][1], wheel[i][2])
+
+            # for i in range(len(wheel)):
+            # for w_record in wheel:
+            # for w_record in wheel:
+            #     if t < w_record[2]:
+            #         print("t < w_record[2]")
+            #         print(w_record[2])
+            #         for id in w_record[0]:
+            #             print("id")
+            #             print(id)
+            #             islands_to_delete.add(id)
+            #         break
+            #     else:
+            #         t += w_record[2]
         return islands_to_delete
 

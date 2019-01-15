@@ -125,14 +125,14 @@ class Figures:
         self.island_matrix.detect_islands()
         self.island_matrix.print_matrix()
 
-    def remove_shape(self, shape):
-        try:
-            shape_copy = deepcopy(shape)
-            self.polygons_data[str(shape_copy.type)].instance_count -= 1
-            self.id_matrix.remove_id(shape)
-            self.shapes.remove(shape)
-        except ValueError:
-            pass
+    # def remove_shape(self, shape):
+    #     try:
+    #         shape_copy = deepcopy(shape)
+    #         self.polygons_data[str(shape_copy.type)].instance_count -= 1
+    #         self.id_matrix.remove_id(shape)
+    #         self.shapes.remove(shape)
+    #     except ValueError:
+    #         pass
 
     # def count_neighbours_factor(self, parent:Shape, coordinates): # todo restrictive factor
     #     factor = SHAPE_TYPE_MAX * 8
