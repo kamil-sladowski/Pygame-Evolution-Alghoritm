@@ -15,6 +15,7 @@ class Game:
         self.screen = pygame.display.set_mode((X_MAX, Y_MAX))
         pygame.font.init()
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.individuals = []
 
     def __check_quit(self, event):
         if event.type == pygame.QUIT:
@@ -31,12 +32,12 @@ class Game:
         self.screen.blit(text_surface, (50, 50))
 
     def evolution(self):
-        pass
-        # self.drawing_manager.f.evolution()
+        individual.generate_population(self.individuals)
 
     def play(self):
         circuit = ""
-        individual.generate_initial_individuals(self.drawing_manager.f)
+        self.individuals = individual.generate_initial_individuals(self.drawing_manager.f)
+
         while True:
             event = pygame.event.wait()
             self.__check_quit(event)
@@ -47,10 +48,19 @@ class Game:
                 circuit = self.mark.count_mark_of_structure()
 
             self.print_mark(text=circuit)
-            for next_id in range(self.drawing_manager.elements_num):
-                self.draw_next_ngon(next_id)
+            for next_id in range(1, self.drawing_manager.elements_num):
+                self.draw_circle(next_id)
+
             pygame.display.update()
             pygame.event.clear()
+
+    def draw_circle(self, next_id):
+        x, y = self.next_pivot[next_id]
+        color = self.drawing_manager.f.id_matrix.get_color_by_id(next_id)
+        x *= RADIUS * 2
+        y *= RADIUS * 2
+        pygame.draw.circle(self.screen,
+                           color, (x, y), RADIUS, 0)
 
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14

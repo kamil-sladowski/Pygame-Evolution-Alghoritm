@@ -9,10 +9,11 @@ class Shape:
         Shape.__count += 1
         return Shape.__count
 
-    def __init__(self, type, pivot):
+    def __init__(self, type, pivot, color=(100,200,100)):
         self.id = Shape._count()
         self.type = type
         self.pivot = pivot
+        self.color = color
 
     def __str__(self):
         return "ID: {} Type: {} Pivot {} Factor {}".format(

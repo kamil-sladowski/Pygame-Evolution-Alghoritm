@@ -28,3 +28,6 @@ class IdMatrix(Matrix):
         x, y = pos
         return self.matrix[y][x]
 
+    def get_color_by_id(self, id):
+        return self.shapes[id].color
+

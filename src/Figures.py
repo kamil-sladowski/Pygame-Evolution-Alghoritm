@@ -67,7 +67,7 @@ class Figures:
             if self.is_point_in_range(new_x, new_y) and (self.id_matrix[new_x, new_y] == 0):
                 return (int(new_x), int(new_y)), (x, y)
 
-    def create_new_individual(self, used_pivots, herited_type):
+    def create_new_individual(self, used_pivots, herited_type, colors):
         genotype = []
         x_space = [0, 0, 1, 1, 1, 2, 2, 2]
         y_space = [1, 2, 0, 1, 2, 0, 1, 2]
@@ -75,12 +75,12 @@ class Figures:
             new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
             used_pivots.append(new_pivot)
             x_P, y_P = new_pivot
-            shape = self.add(pivot=new_pivot, figure_type=herited_type)
+            shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
             genotype.append(shape)
 
             for k in range(8):
                 shape = self.add(pivot=(x_P + x_space[k], y_P + y_space[k]),
-                                 figure_type=herited_type)
+                                 figure_type=herited_type, color=colors[k])
                 genotype.append(shape)
             return Individual(pivot=new_pivot, genotype=genotype)
         except TypeError:
@@ -142,8 +142,9 @@ class Figures:
     #                 pass
     #     return t
 
-    def add(self, pivot=(int(X_MAX / (4 * RADIUS)), int(Y_MAX / (4 * RADIUS))), figure_type=int(SHAPE_TYPE_MAX / 2)):
-        s = Shape(figure_type, pivot)
+    def add(self, pivot=(int(X_MAX / (4 * RADIUS)), int(Y_MAX / (4 * RADIUS))),
+            figure_type=int(SHAPE_TYPE_MAX / 2), color=(100,200,100)):
+        s = Shape(figure_type, pivot, color=color)
         # figure_type = self.mutate(a)
         self.shapes.append(s)
         self.polygons_data[str(figure_type)].instance_count += 1
