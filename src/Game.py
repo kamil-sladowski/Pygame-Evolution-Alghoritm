@@ -2,6 +2,8 @@ import sys
 import pygame
 from math import sin, cos
 from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR
+import individual
+
 
 
 class Game:
@@ -29,15 +31,12 @@ class Game:
         self.screen.blit(text_surface, (50, 50))
 
     def evolution(self):
-        # new_population_size = choice(range(NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX))
-        # for _ in range(new_population_size):
-        #     self.drawing_manager.create_new_object()
-        # self.drawing_manager.kill_series()
-        self.drawing_manager.f.evolution()
+        pass
+        # self.drawing_manager.f.evolution()
 
     def play(self):
         circuit = ""
-
+        individual.generate_initial_individuals(self.drawing_manager.f)
         while True:
             event = pygame.event.wait()
             self.__check_quit(event)
