@@ -21,7 +21,6 @@ class IdMatrix(Matrix):
     def remove_id(self, id):
         x, y = self.shapes[id].pivot
         self.matrix[y][x] = 0
-
         self.figure_matrix.set_type(x, y, 0)
         return self.shapes.pop(id)
 

@@ -1,8 +1,7 @@
 import sys
 import pygame
 from math import sin, cos
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR, NEW_POPULATION_SIZE_MIN, NEW_POPULATION_SIZE_MAX
-from random import choice
+from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR
 
 
 class Game:

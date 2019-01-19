@@ -106,7 +106,6 @@ class IslandMatrix(Matrix):
             t = round(random(), 4)
             for wheel_range in wheel:
                 if wheel_range[1] <= t < wheel_range[2]:
-                    print(wheel_range[0])
                     for id in wheel_range[0]:
                         islands_to_delete.add(id)
                     break

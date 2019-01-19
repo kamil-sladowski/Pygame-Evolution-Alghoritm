@@ -79,7 +79,7 @@ class Figures:
         print("")
         self.island_matrix.detect_islands()
         self.island_matrix.calc_island_statistics()
-        self.id_matrix.print_matrix()
+        self.island_matrix.print_matrix()
         number_of_islands = self.island_matrix.get_number_of_islands()
         if number_of_islands > 1:
             island_ids = [i+1 for i in range(number_of_islands)]
@@ -93,12 +93,10 @@ class Figures:
                     self.island_matrix.print_matrix()
                     print("IndexError in evolution")
 
-            self.island_matrix.detect_islands()
-            self.island_matrix.calc_island_statistics()
+            # self.island_matrix.detect_islands()
+            # self.island_matrix.calc_island_statistics()
 
             islands_to_delete = self.island_matrix.get_islands_to_kill()
-            print("islands_to_delete")
-            print(islands_to_delete)
             for id in islands_to_delete:
                 shape_to_delete = self.id_matrix.remove_id(id)
                 self.remove_shape(shape_to_delete)
