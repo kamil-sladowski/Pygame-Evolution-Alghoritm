@@ -1,4 +1,4 @@
-from random import randint, random, choice, shuffle, getrandbits
+from random import choice, shuffle, getrandbits
 from consts import X_MAX, Y_MAX, RADIUS
 from Shape import Shape
 from IdMatrix import IdMatrix
@@ -57,23 +57,31 @@ class Figures:
         return True
 
     def __count_new_pivot(self, ):
-        while True:
-            x, y = self.random_pivot
+        pivots_tmp = list(map(lambda shape: shape.pivot, self.shapes))
+        shuffle(pivots_tmp)
+        for pivot in pivots_tmp:
+            x, y = pivot
             new_x = x + getrandbits(1) * choice([-1, 1])
             new_y = y + getrandbits(1) * choice([-1, 1])
-            if self.is_point_in_range(new_x, new_y) and (self.id_matrix.matrix[new_y][new_x] == 0): # todo matrix[x, y]
+            if self.is_point_in_range(new_x, new_y) and (self.id_matrix[new_x, new_y] == 0): # todo matrix[x, y]
                 return (int(new_x), int(new_y)), (x, y)
 
     def create_new_object(self, herited_type):
-        child_pivot, parent_pivot = self.__count_new_pivot()
-        self.add(pivot=child_pivot, figure_type=herited_type)
+        try:
+            child_pivot, parent_pivot = self.__count_new_pivot()
+            self.add(pivot=child_pivot, figure_type=herited_type)
+        except TypeError:
+            print("Limit exceeded")
+
 
     def evolution(self):
+        print("")
+        print("")
         self.island_matrix.detect_islands()
+        self.island_matrix.calc_island_statistics()
+        self.id_matrix.print_matrix()
         number_of_islands = self.island_matrix.get_number_of_islands()
         if number_of_islands > 1:
-            self.island_matrix.calc_island_statistics()
-
             island_ids = [i+1 for i in range(number_of_islands)]
             shuffle(island_ids)
             for i in range(0, number_of_islands, 2):
@@ -82,20 +90,26 @@ class Figures:
                         child_type = self.island_matrix.deduce_child_type(island_ids[i], island_ids[i+1])
                         self.create_new_object(child_type)
                 except IndexError:
-                    pass
+                    self.island_matrix.print_matrix()
+                    print("IndexError in evolution")
 
             self.island_matrix.detect_islands()
             self.island_matrix.calc_island_statistics()
+
             islands_to_delete = self.island_matrix.get_islands_to_kill()
             print("islands_to_delete")
             print(islands_to_delete)
             for id in islands_to_delete:
-                self.id_matrix.remove_id(id)
+                shape_to_delete = self.id_matrix.remove_id(id)
+                self.remove_shape(shape_to_delete)
 
         else:
             self.create_new_object(choice([4,5,6,7,8,9]))
 
-
+    def remove_shape(self, shape):
+        shape_copy = deepcopy(shape)
+        self.polygons_data[str(shape_copy.type)].instance_count -= 1
+        self.shapes.remove(shape)
 
     # @staticmethod
     # def mutate(shape):
@@ -122,19 +136,10 @@ class Figures:
         self.shapes.append(a)
         self.polygons_data[str(figure_type)].instance_count += 1
         self.id_matrix.add_id(a)
-        self.island_matrix.detect_islands()
-        self.island_matrix.print_matrix()
 
-    # def remove_shape(self, shape):
-    #     try:
-    #         shape_copy = deepcopy(shape)
-    #         self.polygons_data[str(shape_copy.type)].instance_count -= 1
-    #         self.id_matrix.remove_id(shape)
-    #         self.shapes.remove(shape)
-    #     except ValueError:
-    #         pass
 
-    # def count_neighbours_factor(self, parent:Shape, coordinates): # todo restrictive factor
+
+    # def count_neighbours_factor(self, parent:Shape, coordinates):
     #     factor = SHAPE_TYPE_MAX * 8
     #     try:
     #         for x, y in coordinates:
@@ -149,11 +154,6 @@ class Figures:
     #     finally:
     #         parent.neighbours_field_factor = factor
     #         return factor
-
-    @property
-    def random_pivot(self) -> tuple:
-        id = randint(0, len(self.shapes) - 1)
-        return self.shapes[id].pivot
 
     @property
     def number_of_all_verticles(self) -> int:
