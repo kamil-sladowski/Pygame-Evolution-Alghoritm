@@ -57,7 +57,6 @@ class Game:
     def draw_circle(self, next_id):
         x, y = self.next_pivot[next_id]
         try:
-            self.drawing_manager.f.id_matrix.print_matrix()
             color = self.drawing_manager.f.id_matrix.get_color_by_id(next_id)
             x *= RADIUS * 2
             y *= RADIUS * 2

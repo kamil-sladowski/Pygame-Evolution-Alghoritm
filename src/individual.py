@@ -7,15 +7,6 @@ from consts import X_MAX, Y_MAX, RADIUS, \
 Individual = recordtype('Individual', 'pivot, genotype fitness')
 
 
-# def get_coordinates_from_grid_divided_to_3_x_3():
-#     width, height = int(X_MAX / RADIUS / 2) + 2, int(Y_MAX / RADIUS / 2) + 2
-#     pivots_3x = []
-#     for x in range(0, width - 3 , 3):
-#         for y in range(0, height - 3, 3):
-#             pivots_3x.append((x, y))
-#     print(pivots_3x)
-#     return pivots_3x
-
 def generate_colors():
     colors = []
     for _ in range(9):
@@ -30,9 +21,8 @@ def generate_initial_individuals(figure_obj):
         colors = generate_colors()
         # try:
         individuals.append(figure_obj
-                               .create_new_individual(figure_obj.used_pivots_by_individuals,
-                                                      choice([4, 5, 6, 7, 8, 9]),
-                                                      colors))
+                           .create_new_individual(figure_obj.used_pivots_by_individuals, 4,
+                                                  colors))
         # except TypeError:
         #     print("Limit exceeded") #???
         # except AttributeError:
@@ -82,7 +72,9 @@ def cross(ind_1, ind_2, figure_mgr):
 
         new_individual = figure_mgr.create_new_individual(
             figure_mgr.used_pivots_by_individuals, 4, new_genotype_colors)
-    return new_individual
+        return new_individual
+    else:
+        return None
 
 
 def calculate_fitness(individuals):
@@ -105,14 +97,14 @@ def get_fitness_wheel(individuals, f_max):
 
 
 def get_individuals_to_kill(individuals, fitness_wheel):
-    how_much_kill = choice(range(0, int(len(individuals)/2)))
+    how_much_kill = choice(range(0, int(len(individuals) / 2)))
     individuals_to_delete = []
     for _ in range(how_much_kill):
         t = round(random(), 4)
         for wheel_range in fitness_wheel:
             if wheel_range[1] <= t < wheel_range[2]:
-                # for ind in wheel_range[0]:
-                individuals_to_delete.append(wheel_range[0])
+                if wheel_range[0] not in individuals_to_delete:
+                    individuals_to_delete.append(wheel_range[0])
                 break
 
     return individuals_to_delete
@@ -120,8 +112,10 @@ def get_individuals_to_kill(individuals, fitness_wheel):
 
 def generate_population(individuals, figure_mgr):
     shuffle(individuals)
-    for i in range(0, len(individuals) -2, 2):
-        cross(individuals[i], individuals[i+1], figure_mgr)
+    for i in range(0, len(individuals) - 2, 2):
+        res = cross(individuals[i], individuals[i + 1], figure_mgr)
+        if res is not None:
+            individuals.append(res)
 
     fitness_max = calculate_fitness(individuals)
     wheel = get_fitness_wheel(individuals, fitness_max)
