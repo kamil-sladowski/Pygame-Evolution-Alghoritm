@@ -1,11 +1,9 @@
-from DrawingManager import DrawingManager
+from Figures import Figures
 from Game import Game
-from Mark import Mark
 
 
-d = DrawingManager()
-mark = Mark(d)
-game = Game(d, mark)
+figures_mgr = Figures()
+game = Game(figures_mgr)
 game.play()
 
 
