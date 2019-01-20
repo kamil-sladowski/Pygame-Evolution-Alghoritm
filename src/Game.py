@@ -16,6 +16,7 @@ class Game:
         pygame.font.init()
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
         self.individuals = []
+        self.used_pivots = drawing_manager.f.used_pivots_by_individuals
 
     def __check_quit(self, event):
         if event.type == pygame.QUIT:
@@ -32,12 +33,11 @@ class Game:
         self.screen.blit(text_surface, (50, 50))
 
     def evolution(self):
-        individual.generate_population(self.individuals)
+        individual.generate_population(self.individuals, self.drawing_manager.f)
 
     def play(self):
         circuit = ""
         self.individuals = individual.generate_initial_individuals(self.drawing_manager.f)
-
         while True:
             event = pygame.event.wait()
             self.__check_quit(event)
@@ -56,11 +56,15 @@ class Game:
 
     def draw_circle(self, next_id):
         x, y = self.next_pivot[next_id]
-        color = self.drawing_manager.f.id_matrix.get_color_by_id(next_id)
-        x *= RADIUS * 2
-        y *= RADIUS * 2
-        pygame.draw.circle(self.screen,
-                           color, (x, y), RADIUS, 0)
+        try:
+            self.drawing_manager.f.id_matrix.print_matrix()
+            color = self.drawing_manager.f.id_matrix.get_color_by_id(next_id)
+            x *= RADIUS * 2
+            y *= RADIUS * 2
+            pygame.draw.circle(self.screen,
+                               color, (x, y), RADIUS, 0)
+        except KeyError:
+            pass
 
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14

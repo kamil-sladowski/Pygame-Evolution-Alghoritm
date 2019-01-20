@@ -9,13 +9,14 @@ from consts import SHAPE_TYPE_MIN, SHAPE_TYPE_MAX, MUTATION_PROPABILITY
 from copy import deepcopy
 
 PolygonCharacteristic = recordtype('PolygonsData', 'instance_count, probability, wheel_range')
-Individual = recordtype('Individual', 'pivot, genotype')
+Individual = recordtype('Individual', 'pivot, genotype fitness')
 
 
 class Figures:
     range_begin, range_end = (SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
     shapes = []
     polygons_data = {}
+    used_pivots_by_individuals = [(3,3)]
 
     def __init__(self):
         self.figure_matrix = FigureMatrix()
@@ -60,31 +61,29 @@ class Figures:
     def __count_new_pivot(self, used_pivots):
         # pivots_tmp = list(map(lambda shape: shape.pivot, self.shapes))
         shuffle(used_pivots)
-        for pivot in used_pivots:
-            x, y = pivot
-            new_x = x + getrandbits(1) * choice([-3, 3])
-            new_y = y + getrandbits(1) * choice([-3, 3])
-            if self.is_point_in_range(new_x, new_y) and (self.id_matrix[new_x, new_y] == 0):
-                return (int(new_x), int(new_y)), (x, y)
+        for _ in range(len(used_pivots)*3):
+            for pivot in used_pivots:
+                x, y = pivot
+                new_x = x + getrandbits(1) * choice([-3, 3])
+                new_y = y + getrandbits(1) * choice([-3, 3])
+                if self.is_point_in_range(new_x, new_y) and (self.id_matrix[new_x, new_y] == 0):
+                    return (int(new_x), int(new_y)), (x, y)
 
     def create_new_individual(self, used_pivots, herited_type, colors):
         genotype = []
         x_space = [0, 0, 1, 1, 1, 2, 2, 2]
         y_space = [1, 2, 0, 1, 2, 0, 1, 2]
-        try:
-            new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
-            used_pivots.append(new_pivot)
-            x_P, y_P = new_pivot
-            shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
-            genotype.append(shape)
+        new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
+        used_pivots.append(new_pivot)
+        x_P, y_P = new_pivot
+        shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
+        genotype.append(shape)
 
-            for k in range(8):
-                shape = self.add(pivot=(x_P + x_space[k], y_P + y_space[k]),
-                                 figure_type=herited_type, color=colors[k])
-                genotype.append(shape)
-            return Individual(pivot=new_pivot, genotype=genotype)
-        except TypeError:
-            print("Limit exceeded")
+        for k in range(8):
+            shape = self.add(pivot=(x_P + x_space[k], y_P + y_space[k]),
+                             figure_type=herited_type, color=colors[k])
+            genotype.append(shape)
+        return Individual(pivot=new_pivot, genotype=genotype, fitness=0)
 
     def generate_random_number_of_figures(self, used_pivots, number_of_islands):
         island_ids = [i + 1 for i in range(number_of_islands)]
@@ -113,37 +112,29 @@ class Figures:
             islands_to_delete = self.island_matrix.get_islands_to_kill()
             for id in islands_to_delete:
                 shape_to_delete = self.id_matrix.remove_id(id)
-                self.remove_shape(shape_to_delete)
+                self.__remove_shape(shape_to_delete)
 
         else:
             self.create_new_individual(used_pivots, choice([4, 5, 6, 7, 8, 9]))
 
-    def remove_shape(self, shape):
+    def remove_individual(self, individuals_to_delete):
+        print("pre")
+        print(self.used_pivots_by_individuals)
+        for ind in individuals_to_delete:
+            for gen in ind.genotype:
+                self.id_matrix.remove_id(gen.id)
+                self.__remove_shape(gen)
+            self.used_pivots_by_individuals.remove(ind.pivot)
+        print("aft")
+        print(self.used_pivots_by_individuals)
+
+    def __remove_shape(self, shape):
         shape_copy = deepcopy(shape)
         self.polygons_data[str(shape_copy.type)].instance_count -= 1
         self.shapes.remove(shape)
 
-    # @staticmethod
-    # def mutate(shape):
-    #     r = random()
-    #     t = shape.type
-    #     mutation_types = [t-1, t, t+1,]
-    #     if r > MUTATION_PROPABILITY:
-    #         while True:
-    #             try:
-    #                 shuffle(mutation_types)
-    #                 t = choice([mutation_types[0], mutation_types[1]])
-    #                 assert t in range(SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
-    #                 shape.type = t
-    #                 return t
-    #             except KeyError:
-    #                 pass
-    #             except AssertionError:
-    #                 pass
-    #     return t
-
     def add(self, pivot=(int(X_MAX / (4 * RADIUS)), int(Y_MAX / (4 * RADIUS))),
-            figure_type=int(SHAPE_TYPE_MAX / 2), color=(100,200,100)):
+            figure_type=int(SHAPE_TYPE_MAX / 2), color=(100, 200, 100)):
         s = Shape(figure_type, pivot, color=color)
         # figure_type = self.mutate(a)
         self.shapes.append(s)

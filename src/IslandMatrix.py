@@ -87,28 +87,7 @@ class IslandMatrix(Matrix):
     def get_coordinates_of_given_num(self, num):
         return self.islands[num].coordinates
 
-    def fitness_wheel(self):
-        f_max = 0
-        wheel = []
-        for num in range(self.islands_num):
-            f_max += self.islands[num +1].fitness
-        previous = 0
-        for num in range(1, self.islands_num):
-            wheel.append((self.islands[num + 1].ids, previous, round(previous + self.islands[num +1].fitness/f_max, 4)))
-            previous = round(previous + self.islands[num + 1].fitness / f_max, 4)
-        return wheel, f_max
 
-    def get_islands_to_kill(self):
-        how_much_kill = choice(range(0, int(self.islands_num/2)))
-        islands_to_delete = set()
-        wheel, f_max = self.fitness_wheel()
-        for _ in range(how_much_kill):
-            t = round(random(), 4)
-            for wheel_range in wheel:
-                if wheel_range[1] <= t < wheel_range[2]:
-                    for id in wheel_range[0]:
-                        islands_to_delete.add(id)
-                    break
 
-        return islands_to_delete
+
 
