@@ -1,6 +1,6 @@
 import sys
 import pygame
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX
+from consts import COLOR1, RADIUS, X_MAX, Y_MAX, CYCLE_PER_CLICK
 import individual
 
 
@@ -22,7 +22,8 @@ class Game:
             sys.exit()
 
     def evolution(self):
-        individual.generate_population(self.individuals, self.figures_mgr)
+        for _ in range(CYCLE_PER_CLICK):
+            individual.generate_population(self.individuals, self.figures_mgr)
 
     def play(self):
         self.individuals = individual.generate_initial_individuals(self.figures_mgr)

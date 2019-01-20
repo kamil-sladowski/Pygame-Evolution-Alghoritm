@@ -1,8 +1,7 @@
 from random import choice, shuffle, randint, random
 
 from recordtype import recordtype
-from consts import X_MAX, Y_MAX, RADIUS, \
-    INITIAL_INDIVIDUALS_NUM, INDIVIDUM_SIZE
+from consts import *
 
 Individual = recordtype('Individual', 'pivot, genotype fitness')
 
@@ -19,34 +18,28 @@ def generate_initial_individuals(figure_obj):
 
     for _ in range(INITIAL_INDIVIDUALS_NUM):
         colors = generate_colors()
-        # try:
         individuals.append(figure_obj
                            .create_new_individual(figure_obj.used_pivots_by_individuals, 4,
                                                   colors))
-        # except TypeError:
-        #     print("Limit exceeded") #???
-        # except AttributeError:
-        #     print("AttributeError")
     return individuals
 
 
 def mutate(genotype_color):
     i = random()
-    # if i > 0.9:
-    #     for subcolor in genotype_color:
-    #         genotype_color_tmp = subcolor
-    #         mask = 1 << randint(0, 7)
-    #         subcolor &= ~mask
-    #         if subcolor == genotype_color_tmp:
-    #             subcolor |= ~mask
-
+    if i > MUTATION_PROPABILITY:
+        for subcolor in genotype_color:
+            genotype_color_tmp = subcolor
+            mask = 1 << randint(0, 7)
+            subcolor &= ~mask
+            if subcolor == genotype_color_tmp:
+                subcolor |= ~mask
     return genotype_color
 
 
 def cross(ind_1, ind_2, figure_mgr):
     new_genotype_colors = []
-    cross_propability = 1.0
-    if cross_propability > 0.5:
+    cross_propability = random()
+    if cross_propability > CROSS_PROPABILITY:
         genotype_colors_1 = list(map(lambda g: g.color, ind_1.genotype))
         genotype_colors_2 = list(map(lambda g: g.color, ind_2.genotype))
         figures_to_change = randint(1, 9)
@@ -80,6 +73,9 @@ def cross(ind_1, ind_2, figure_mgr):
 
 def calculate_fitness(individuals):
     f_max = 0
+    for ind in individuals:
+        ind.fitness = 0
+
     for ind in individuals:
         for gen in ind.genotype:
             for subcolor in gen.color:
