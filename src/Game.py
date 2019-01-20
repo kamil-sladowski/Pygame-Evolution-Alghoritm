@@ -48,22 +48,21 @@ class Game:
                 circuit = self.mark.count_mark_of_structure()
 
             self.print_mark(text=circuit)
-            for next_id in range(1, self.drawing_manager.elements_num):
-                self.draw_circle(next_id)
+
+            self.draw_circles(self.drawing_manager.f.shapes)
 
             pygame.display.update()
             pygame.event.clear()
 
-    def draw_circle(self, next_id):
-        x, y = self.next_pivot[next_id]
-        try:
-            color = self.drawing_manager.f.id_matrix.get_color_by_id(next_id)
+    def draw_circles(self, shapes):
+        for shape in shapes:
+            x, y = shape.pivot
+            color = shape.color
             x *= RADIUS * 2
             y *= RADIUS * 2
             pygame.draw.circle(self.screen,
                                color, (x, y), RADIUS, 0)
-        except KeyError:
-            pass
+
 
     def draw_next_ngon(self, next_id):
         pi2 = 2 * 3.14

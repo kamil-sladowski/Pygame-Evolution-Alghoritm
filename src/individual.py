@@ -71,7 +71,8 @@ def cross(ind_1, ind_2, figure_mgr):
         new_genotype_colors.extend(genotype_colors_1[0:residue_num])
 
         new_individual = figure_mgr.create_new_individual(
-            figure_mgr.used_pivots_by_individuals, 4, new_genotype_colors)
+            figure_mgr.used_pivots_by_individuals,
+            4, new_genotype_colors)
         return new_individual
     else:
         return None

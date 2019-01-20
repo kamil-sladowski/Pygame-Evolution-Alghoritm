@@ -55,7 +55,6 @@ class Figures:
         return True
 
     def __count_new_pivot(self, used_pivots):
-        # pivots_tmp = list(map(lambda shape: shape.pivot, self.shapes))
         shuffle(used_pivots)
         for _ in range(len(used_pivots) * 3):
             for pivot in used_pivots:
@@ -70,7 +69,8 @@ class Figures:
         x_space = [0, 0, 1, 1, 1, 2, 2, 2]
         y_space = [1, 2, 0, 1, 2, 0, 1, 2]
 
-        def create_shape_in_individual(x_P, y_P):
+        def create_child_shapes_in_individual(new_pivot):
+            x_P, y_P = new_pivot
             for k in range(8):
                 shape = self.add(pivot=(x_P + x_space[k], y_P + y_space[k]),
                                  figure_type=herited_type, color=colors[k])
@@ -80,11 +80,11 @@ class Figures:
             new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
 
             used_pivots.append(new_pivot)
-            x_P, y_P = new_pivot
+
             shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
             genotype.append(shape)
             try:
-                create_shape_in_individual(x_P, y_P)
+                create_child_shapes_in_individual(new_pivot)
             except IndexError as e:
                 print("Index error")
                 print(e.args)
@@ -100,14 +100,16 @@ class Figures:
             # print("will delete pivot ")
             # print(ind.pivot)
             # self.used_pivots_by_individuals.remove(ind.pivot) # widac zbedne
+            print("############")
             for shape in ind.genotype:
-                try:
+
+                # try:
                     self.polygons_data[str(shape.type)].instance_count -= 1
                     self.id_matrix.remove_id(shape.id)
                     self.shapes.remove(shape)
-                except KeyError as e:
-                    print("KeyError")
-                    print(e.args)
+                # except KeyError as e:
+                #     print("KeyError")
+                #     print(e.args)
         print("aft")
         print(self.used_pivots_by_individuals)
 
