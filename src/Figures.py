@@ -76,42 +76,28 @@ class Figures:
                                  figure_type=herited_type, color=colors[k])
                 genotype.append(shape)
 
+        new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
+
+        used_pivots.append(new_pivot)
+
+        shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
+        genotype.append(shape)
         try:
-            new_pivot, previous_pivot = self.__count_new_pivot(used_pivots)
+            create_child_shapes_in_individual(new_pivot)
+        except IndexError as e:
+            print("Index error")
+            print(e.args)
+        return Individual(pivot=new_pivot, genotype=genotype, fitness=0)
 
-            used_pivots.append(new_pivot)
-
-            shape = self.add(pivot=new_pivot, figure_type=herited_type, color=colors[0])
-            genotype.append(shape)
-            try:
-                create_child_shapes_in_individual(new_pivot)
-            except IndexError as e:
-                print("Index error")
-                print(e.args)
-            return Individual(pivot=new_pivot, genotype=genotype, fitness=0)
-        except TypeError:
-            print("TypeError")
-
-    def remove_individual(self, individuals_to_delete):
-        print("pre")
-        print(self.used_pivots_by_individuals)
+    def remove_individual(self, individuals_to_delete, all_individuals):
         for ind in individuals_to_delete:
-            # print(self.used_pivots_by_individuals)
-            # print("will delete pivot ")
-            # print(ind.pivot)
-            # self.used_pivots_by_individuals.remove(ind.pivot) # widac zbedne
-            print("############")
+            self.used_pivots_by_individuals.remove(ind.pivot)
             for shape in ind.genotype:
+                self.polygons_data[str(shape.type)].instance_count -= 1
+                self.id_matrix.remove_id(shape.id)
+                self.shapes.remove(shape)
 
-                # try:
-                    self.polygons_data[str(shape.type)].instance_count -= 1
-                    self.id_matrix.remove_id(shape.id)
-                    self.shapes.remove(shape)
-                # except KeyError as e:
-                #     print("KeyError")
-                #     print(e.args)
-        print("aft")
-        print(self.used_pivots_by_individuals)
+            all_individuals.remove(ind)
 
     def add(self, pivot=(int(X_MAX / (4 * RADIUS)), int(Y_MAX / (4 * RADIUS))),
             figure_type=int(SHAPE_TYPE_MAX / 2), color=(100, 200, 100)):

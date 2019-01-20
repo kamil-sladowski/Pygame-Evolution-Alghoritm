@@ -113,7 +113,8 @@ def get_individuals_to_kill(individuals, fitness_wheel):
 
 def generate_population(individuals, figure_mgr):
     shuffle(individuals)
-    for i in range(0, len(individuals) - 2, 2):
+    child_limits = (len(individuals) - 2) % 10
+    for i in range(0, child_limits, 2):
         res = cross(individuals[i], individuals[i + 1], figure_mgr)
         if res is not None:
             individuals.append(res)
@@ -121,4 +122,4 @@ def generate_population(individuals, figure_mgr):
     fitness_max = calculate_fitness(individuals)
     wheel = get_fitness_wheel(individuals, fitness_max)
     individuals_to_delete = get_individuals_to_kill(individuals, wheel)
-    figure_mgr.remove_individual(individuals_to_delete)
+    figure_mgr.remove_individual(individuals_to_delete, individuals)

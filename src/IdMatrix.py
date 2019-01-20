@@ -22,12 +22,10 @@ class IdMatrix(Matrix):
         x, y = self.shapes[id].pivot
         self.matrix[y][x] = 0
         self.figure_matrix.set_type(x, y, 0)
-        return self.shapes.pop(id)
+        self.shapes.pop(id)
 
     def __getitem__(self, pos):
         x, y = pos
         return self.matrix[y][x]
 
-    def get_color_by_id(self, id):
-        return self.shapes[id].color
 

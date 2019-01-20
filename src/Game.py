@@ -1,7 +1,6 @@
 import sys
 import pygame
-from math import sin, cos
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX, FONT_COLOR
+from consts import COLOR1, RADIUS, X_MAX, Y_MAX
 import individual
 
 
@@ -27,6 +26,7 @@ class Game:
 
     def play(self):
         self.individuals = individual.generate_initial_individuals(self.figures_mgr)
+
         while True:
             event = pygame.event.wait()
             self.__check_quit(event)
@@ -34,11 +34,13 @@ class Game:
             if pygame.mouse.get_pressed()[0]:
                 self.evolution()
 
+            self.screen.fill((0,0,0))
             self.draw_circles(self.figures_mgr.shapes)
             pygame.display.update()
             pygame.event.clear()
 
     def draw_circles(self, shapes):
+
         for shape in shapes:
             x, y = shape.pivot
             color = shape.color
