@@ -1,5 +1,4 @@
 from random import choice, shuffle, randint, random
-
 from recordtype import recordtype
 from consts import *
 
@@ -64,15 +63,14 @@ def cross(ind_1, ind_2, figure_mgr):
         new_genotype_colors.extend(genotype_colors_1[0:residue_num])
 
         new_individual = figure_mgr.create_new_individual(
-            figure_mgr.used_pivots_by_individuals,
-            4, new_genotype_colors)
+            figure_mgr.used_pivots_by_individuals, 4, new_genotype_colors)
         return new_individual
     else:
         return None
 
 
 def calculate_fitness(individuals):
-    f_max = 0
+    f_max = 0.01
     for ind in individuals:
         ind.fitness = 0
 
@@ -94,7 +92,8 @@ def get_fitness_wheel(individuals, f_max):
 
 
 def get_individuals_to_kill(individuals, fitness_wheel):
-    how_much_kill = choice(range(0, int(len(individuals) / 2)))
+    i_len = len(individuals)
+    how_much_kill = choice(range(int(i_len * KILL_FACTOR_MIN), int(i_len * KILL_FACTOR_MAX)))
     individuals_to_delete = []
     for _ in range(how_much_kill):
         t = round(random(), 4)
@@ -109,7 +108,7 @@ def get_individuals_to_kill(individuals, fitness_wheel):
 
 def generate_population(individuals, figure_mgr):
     shuffle(individuals)
-    child_limits = (len(individuals) - 2) % 10
+    child_limits = (len(individuals) - 2) % CHILD_LIMIT
     for i in range(0, child_limits, 2):
         res = cross(individuals[i], individuals[i + 1], figure_mgr)
         if res is not None:

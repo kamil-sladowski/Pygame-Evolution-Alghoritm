@@ -16,7 +16,7 @@ class Figures:
     range_begin, range_end = (SHAPE_TYPE_MIN, SHAPE_TYPE_MAX)
     shapes = []
     polygons_data = {}
-    used_pivots_by_individuals = [(3, 3)]
+    used_pivots_by_individuals = [(int(X_MAX / RADIUS / 6), int(Y_MAX / RADIUS / 6))]
 
     def __init__(self):
         self.figure_matrix = FigureMatrix()

@@ -1,6 +1,6 @@
 import sys
 import pygame
-from consts import COLOR1, RADIUS, X_MAX, Y_MAX, CYCLE_PER_CLICK
+from consts import RADIUS, X_MAX, Y_MAX, CYCLE_PER_CLICK
 import individual
 
 
